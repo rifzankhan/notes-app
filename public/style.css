@@ -129,13 +129,20 @@ body {
 	top: 20px;
 	right: 20px;
 	z-index: 5;
+	cursor: pointer;
 }
+
+.fa {
+	cursor: pointer;
+}
+
 .noteCard .fa:hover {
 	cursor: pointer;
 }
 
 .noteCard .fa-edit {
 	right: 50px;
+	cursor: pointer;
 }
 
 .noteCard input[type=submit] {

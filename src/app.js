@@ -25,6 +25,8 @@ firebase.initializeApp(config);
       this.addNote = this.addNote.bind(this);
       this.showCreate = this.showCreate.bind(this);
       this.createUser = this.createUser.bind(this);
+      this.showLogin = this.showLogin.bind(this);
+      this.loginUser = this.loginUser.bind(this);
     }
 
     componentDidMount () {
@@ -68,13 +70,13 @@ firebase.initializeApp(config);
     }
 
     showCreate(e) {
-    	e.preventDefault;
+    	e.preventDefault();
     	this.overlay.classList.toggle("show");
-    	this.createUserModal.classList.toggle('show');
+    	this.createUserModal.classList.toggle("show");
     }
 
     createUser(e) {
-    	e.preventDefault;
+    	e.preventDefault();
     	const email = this.createEmail.value;
     	const password = this.createPassword.value;
     	const confirm = this.confirmPassword.value;
@@ -92,16 +94,41 @@ firebase.initializeApp(config);
     	}
     }
 
+    showLogin(e) {
+    	e.preventDefault();
+    	this.overlay.classList.toggle('show');
+    	this.loginModal.classList.toggle('show');
+    }
+
+    loginUser(e) {
+    	e.preventDefault();
+    	const email = this.userEmail.value;
+    	const password = this.userPassword.value;
+
+
+    	firebase.auth()
+    		.signInWithEmailAndPassword(email,password)
+    		.then((res) => {
+    			this.showLogin(e);
+    		})
+    		.catch((err) => {
+    			alert(err.message)
+    		});
+    }
+
     render() {
       return (
         <div>
+
         	<header className="mainHeader">
         		<h1>Noted</h1>
         		<nav>
         			<a href="" onClick={this.showSidebar}>Add New Note</a>
         			<a href="" onClick={this.showCreate}>Create Account</a>
+        			<a href="" onClick={this.showLogin}>Login</a>
         		</nav>
         	</header> 
+
         	<div className="overlay" ref={ref => this.overlay = ref}></div>
         	<section className="notes">
             	{this.state.notes.map((note,i) => {
@@ -114,6 +141,7 @@ firebase.initializeApp(config);
                 );
             }).reverse()}
         	</section>
+
         	<aside className="sidebar" ref={ref => this.sidebar = ref}>
         		<form onSubmit={this.addNote}>
               <h3>Add New Note</h3>
@@ -127,9 +155,29 @@ firebase.initializeApp(config);
         			<input type="submit" value="Add New Note"/> 
         		</form>
         	</aside>
+
+        	<div className="loginModal modal" ref={ref => this.loginModal = ref}>
+        		<div className="close">
+        			<i className="fa fa-times" onClick={this.showLogin}></i>
+        		</div>
+        		<form action="" onSubmit={this.loginUser}>
+        			<div>
+        				<label htmlFor="email">Email:</label>
+        				<input type="text" name="email" ref={ref => this.userEmail = ref}/>
+        			</div>
+        			<div>
+        				<label htmlFor="password">Password</label>
+        				<input type="password" name="password" ref={ref => this.userPassword = ref}/>
+        			</div>
+        			<div>
+        				<input type="submit" value="Login"/>
+        			</div>
+        		</form>
+        	</div>
+
         	<div className="createUserModal modal" ref={ref => this.createUserModal = ref}>
         		<div className="close">
-        			<i className="fa fa-times"></i>
+        			<i className="fa fa-times" onClick={this.showCreate}></i>
         		</div>
         		<form action="" onSubmit={this.createUser}>
         			<div>
@@ -142,7 +190,7 @@ firebase.initializeApp(config);
         			</div>
         			<div>
         				<label htmlFor="comfirmPassword">Comfirm Password:</label>
-        				<input type="password" name="comfirmPassword" ref={ref => this.comfirmPassword = ref}/>	
+        				<input type="password" name="comfirmPassword" ref={ref => this.confirmPassword = ref}/>	
         			</div>
         			<div>
         				<input type="submit" value="Create" />
